@@ -4,14 +4,10 @@ RSpec.describe Sentinel do
   before :each do
     Sentinel.oauth_token = "OAUTH_TOKEN"
     Sentinel.instance_url = "INSTANCE_URL"
-    Sentinel.client_id = "CLIENT_ID"
-    Sentinel.client_secret = "CLIENT_SECRET"
   end
 
   it { expect(Sentinel.oauth_token).to eql("OAUTH_TOKEN") }
   it { expect(Sentinel.instance_url).to eql("INSTANCE_URL") }
-  it { expect(Sentinel.client_id).to eql("CLIENT_ID") }
-  it { expect(Sentinel.client_secret).to eql("CLIENT_SECRET") }
   it { expect(Sentinel.valid_environment?).to eql(true) }
 
   context "configuring library" do

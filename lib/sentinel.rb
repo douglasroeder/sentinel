@@ -12,12 +12,6 @@ module Sentinel
     # OmniAuth instance_url authentication attribute
     attr_accessor :instance_url
 
-    # OAuth client_id application attribute
-    attr_accessor :client_id
-
-    # OAuth client_secret application attribute
-    attr_accessor :client_secret
-
     def configure(&block)
       yield self
     end
@@ -25,7 +19,7 @@ module Sentinel
     def valid_environment?
       valid = true
 
-      [:oauth_token, :instance_url, :client_id, :client_secret].each do |field|
+      [:oauth_token, :instance_url].each do |field|
         valid = false if send(field).to_s.empty?
       end
 
@@ -36,9 +30,7 @@ module Sentinel
       raise Sentinel::InvalidEnvironmentError unless valid_environment?
 
       @client = Restforce.new oauth_token: oauth_token,
-        instance_url: instance_url,
-        client_id: client_id,
-        client_secret: client_secret
+        instance_url: instance_url
     end
   end
 end
