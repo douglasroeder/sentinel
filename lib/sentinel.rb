@@ -9,9 +9,6 @@ module Sentinel
     # OAuth token authentication attribute
     attr_accessor :oauth_token
 
-    # OAuth refresht_token authentication attribute
-    attr_accessor :refresh_token
-
     # OmniAuth instance_url authentication attribute
     attr_accessor :instance_url
 
@@ -39,7 +36,6 @@ module Sentinel
       raise Sentinel::InvalidEnvironmentError unless valid_environment?
 
       @client = Restforce.new oauth_token: oauth_token,
-        refresh_token: refresh_token,
         instance_url: instance_url,
         client_id: client_id,
         client_secret: client_secret
