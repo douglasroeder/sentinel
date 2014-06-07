@@ -28,7 +28,7 @@ module Sentinel
     def valid_environment?
       valid = true
 
-      [:oauth_token, :refresh_token, :instance_url, :client_id, :client_secret].each do |field|
+      [:oauth_token, :instance_url, :client_id, :client_secret].each do |field|
         valid = false if send(field).to_s.empty?
       end
 
