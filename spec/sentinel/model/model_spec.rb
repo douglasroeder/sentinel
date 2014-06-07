@@ -13,6 +13,14 @@ RSpec.describe Sentinel::Model do
 
   it { expect(TestClass.entity_name).to eql('Contact') }
 
+  it 'should use class name as Entity name if not specified' do
+    class Contact
+      include Sentinel::Model
+    end
+
+    expect(Contact.entity_name).to eql('Contact')
+  end
+
   it "should have dynamic fields" do
     test = TestClass.new
 
@@ -52,19 +60,56 @@ RSpec.describe Sentinel::Model do
     end
   end
 
-  context 'saving model' do
-    describe 'new entity row' do
+  context 'when saving entity' do
+    describe 'a new entity row' do
+      let(:valid_data) do
+        { name: 'John Doe', email: 'johndoe@example.org', telephone: '(11) 9996-26655' }
+      end
+
       it 'should create a new row' do
         client_mock = double
         expect(client_mock).to receive(:create)
         allow(Sentinel).to receive(:client) { client_mock }
 
         test = TestClass.new
+        test.name = "John Doe"
         test.save
+      end
+
+      it 'should be possible create passing all data attributes' do
+        client_mock = double
+        expect(client_mock).to receive(:create)
+        allow(Sentinel).to receive(:client) { client_mock }
+
+        TestClass.create(valid_data)
+      end
+
+      describe 'when successfuly on create' do
+        it 'should return true' do
+          client_mock = double
+          allow(client_mock).to receive(:create) { true }
+          allow(Sentinel).to receive(:client) { client_mock }
+
+          expect( TestClass.create(valid_data)).to eql(true)
+        end
+      end
+
+      describe 'when unsuccessfuly on create' do
+        it 'should return false' do
+          client_mock = double
+          allow(client_mock).to receive(:create) { raise }
+          allow(Sentinel).to receive(:client) { client_mock }
+
+          expect( TestClass.create(valid_data)).to eql(false)
+        end
       end
     end
 
-    describe 'existing entity row' do
+    describe 'an existing entity row' do
+      let(:valid_data) do
+        { name: 'Fritz' }
+      end
+
       it 'should update exising row' do
         client_mock = double
         expect(client_mock).to receive(:update)
@@ -74,6 +119,64 @@ RSpec.describe Sentinel::Model do
         test.id = '123'
         test.name = 'Fritz'
         test.save
+      end
+
+      it 'should be possible to update passing Id and data attributes' do
+        client_mock = double
+        expect(client_mock).to receive(:update)
+        allow(Sentinel).to receive(:client) { client_mock }
+
+        TestClass.update(123, valid_data)
+      end
+
+      describe 'when successfuly on update' do
+        it 'should return true' do
+          client_mock = double
+          allow(client_mock).to receive(:update) { true }
+          allow(Sentinel).to receive(:client) { client_mock }
+
+          expect( TestClass.update(123, valid_data)).to eql(true)
+        end
+      end
+
+      describe 'when unsuccessfuly on update' do
+        it 'should return false' do
+          client_mock = double
+          allow(client_mock).to receive(:update) { raise }
+          allow(Sentinel).to receive(:client) { client_mock }
+
+          expect( TestClass.update(123, valid_data)).to eql(false)
+        end
+      end
+    end
+  end
+
+  describe 'removing a row from the entity' do
+    it 'should remove the row' do
+      client_mock = double
+      expect(client_mock).to receive(:destroy).with('Contact', 123)
+      allow(Sentinel).to receive(:client) { client_mock }
+
+      TestClass.destroy(123)
+    end
+
+    describe 'when successfuly on removing' do
+      it 'should return true' do
+        client_mock = double
+        allow(client_mock).to receive(:destroy) { true }
+        allow(Sentinel).to receive(:client) { client_mock }
+
+        expect( TestClass.destroy(123)).to eql(true)
+      end
+    end
+
+    describe 'when unsuccessfuly on update' do
+      it 'should return false' do
+        client_mock = double
+        allow(client_mock).to receive(:destroy) { raise }
+        allow(Sentinel).to receive(:client) { client_mock }
+
+        expect( TestClass.destroy(123)).to eql(false)
       end
     end
   end

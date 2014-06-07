@@ -1,6 +1,6 @@
 # Sentinel
 
-Sentinel is a SalesForce integration gem. 
+Sentinel is a SalesForce integration gem. This gem allows you to do simple data access operations, like **find/create/update**.
 
 ## Installing
 
@@ -14,20 +14,18 @@ Then `bundle install`.
 
 ## Usage
 
-Here's a quick example, adding the Sentinel configuration to a Rails app in `config/initializers/sentinel.rb`:
+It depends on an OAuth2 integration, before you can execute any Sentinel operation, said that, we need to configure our OAuth credentials:
+
+Example:
 
 ```ruby
 Sentinel.configure do |c|
-  c.client_id = "CLIENT_ID"
-  c.client_secret = "CLIENT_SECRET"
+  c.oauth_token = session['oauth_token']
+  c.instance_url = session['instance_url']
 end
 ```
 
-It depends on an OAuth2 integration, so you will need to pass the OAuth Token
-and Secret to allow Sentinel do any entity action.
-
-This gem allows you to do simple data access operations, like
-find/create/update.
+I suggest you to use **[omniauth-salesforce](https://github.com/realdoug/omniauth-salesforce)** to do that. I will not enter on details here, because you can find more information [here](https://github.com/realdoug/omniauth-salesforce).
 
 ### Sentinel::Model.find
 
@@ -57,7 +55,7 @@ find/create/update.
 ## Extending
 
 This is a generic gem, so you can improve and use other entities not provided
-by the gem.
+by this gem.
 
 Example:
 

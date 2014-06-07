@@ -4,6 +4,10 @@ module Sentinel
 
     def self.included(base)
       base.extend ClassMethods
+
+      if base.entity_name.to_s.empty?
+        base.entity_name = base.name
+      end
     end
 
     module ClassMethods
@@ -44,11 +48,23 @@ module Sentinel
 
       # Update an existing SalesForce entity row
       #
-      # @param id [Object] corresponding entity id for updated
+      # @param id [String] corresponding entity id to be updated
       # @param attrs [Hash] set of fields to update
       #
       def update(id, attrs)
         Sentinel.client.update(entity_name, attrs.merge(Id: id))
+
+        return true
+      rescue
+        return false
+      end
+
+      # Delete an existing SalesForce entity row
+      #
+      # @param id [String] corresponding entity id to be removed
+      #
+      def destroy(id)
+        Sentinel.client.destroy(entity_name, id)
 
         return true
       rescue
@@ -89,10 +105,6 @@ module Sentinel
     end
 
     def initialize
-      if self.class.entity_name.to_s.empty?
-        self.class.entity_name = self.class.name
-      end
-
       self.class.fields.keys.each do |key|
         attribute = self.class.fields[key]
         field_name = attribute[:alias] ? attribute[:alias] : key
@@ -105,6 +117,8 @@ module Sentinel
       end
     end
 
+    # Saves the current row, if this is a new record he tries to create a new
+    # row or updates it.
     def save
       if new_record?
         self.class.create(attrs)
@@ -127,7 +141,11 @@ module Sentinel
         has_alias = attribute[:alias]
 
         key_name = has_alias ? k : attribute[:alias]
-        response[key_name] = has_alias ? send(attribute[:alias]) : send(k)
+        field_value = has_alias ? send(attribute[:alias]) : send(k)
+
+        if field_value
+          response[key_name] = field_value
+        end
       end
 
       return response
