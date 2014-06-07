@@ -25,6 +25,7 @@ RSpec.describe Sentinel::Model do
       allow(Sentinel).to receive(:client) { client_mock }
 
       response_mock = double
+      allow(response_mock).to receive(:Id) { '123' }
       allow(response_mock).to receive(:Name) { 'John Doe' }
       allow(response_mock).to receive(:Email) { 'johndoe@example.org' }
       allow(response_mock).to receive(:Telephone) { '(11) 9999-8833' }
@@ -36,6 +37,7 @@ RSpec.describe Sentinel::Model do
       test = TestClass.find(123)
 
       expect(test.name).to eql('John Doe')
+      expect(test.id).to eql('123')
     end
   end
 

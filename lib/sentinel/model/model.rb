@@ -17,6 +17,8 @@ module Sentinel
         result = Sentinel.client.find(entity_name, id)
 
         klass = new
+
+        klass.id = result.Id
         @fields.keys.each do |k|
           attribute = @fields[k]
           has_alias = attribute[:alias]
