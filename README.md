@@ -1,24 +1,30 @@
 # Sentinel
 
-TODO: Write a gem description
+Sentinel is a SalesForce integration gem. 
 
-## Installation
+## Installing
 
 Add this line to your application's Gemfile:
 
-    gem 'sentinel'
+```ruby
+gem 'sentinel', :git => 'git@bitbucket.org:mandrakez/sentinel.git'
+```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install sentinel
+Then `bundle install`.
 
 ## Usage
 
-TODO: Write usage instructions here
+Here's a quick example, adding the Sentinel configuration to a Rails app in `config/initializers/sentinel.rb`:
+
+```ruby
+Sentinel.configure do |c|
+  c.client_id = "CLIENT_ID"
+  c.client_secret = "CLIENT_SECRET"
+end
+```
+
+It depends on an OAuth2 integration, so you will need to pass the OAuth Token
+and Secret to allow Sentinel do any entity action.
 
 ## Contributing
 
