@@ -48,7 +48,7 @@ module Sentinel
       # @param attrs [Hash] set of fields to update
       #
       def update(id, attrs)
-        Sentinel.client.update(entity_name, id, attrs)
+        Sentinel.client.update(entity_name, attrs.merge(Id: id))
 
         return true
       rescue
