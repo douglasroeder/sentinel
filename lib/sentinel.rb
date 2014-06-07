@@ -2,6 +2,7 @@ require 'restforce'
 
 require "sentinel/version"
 require "sentinel/exceptions"
+require "sentinel/model/model"
 
 module Sentinel
   class << self
