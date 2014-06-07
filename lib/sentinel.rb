@@ -20,7 +20,7 @@ module Sentinel
     # OAuth client_secret application attribute
     attr_accessor :client_secret
 
-    def setup(&block)
+    def configure(&block)
       yield self
     end
 

@@ -26,7 +26,7 @@ RSpec.describe Sentinel do
 
     it "yields Sentinel" do
       expect {|block|
-        Sentinel.setup(&block)
+        Sentinel.configure(&block)
       }.to yield_with_args(Sentinel)
     end
   end
