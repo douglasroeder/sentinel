@@ -176,6 +176,21 @@ RSpec.describe Sentinel::Model do
         TestClass.update(123, valid_data)
       end
 
+      describe '#update_attributes' do
+        let(:attrs) do
+          { id: '123', name: 'Fritz' }
+        end
+
+        it 'should update entity passing a Hash object' do
+          client_mock = double
+          expect(client_mock).to receive(:update)
+          allow(Sentinel).to receive(:client) { client_mock }
+
+          test = TestClass.new
+          test.update_attributes(attrs)
+        end
+      end
+
       describe 'when successfuly on update' do
         it 'should return true' do
           client_mock = double

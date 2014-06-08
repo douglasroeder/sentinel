@@ -1,5 +1,7 @@
 module Sentinel
   module Model
+    # primary key
+    # TODO :id must be provided by Model.field method
     attr_accessor :id
 
     def self.included(base)
@@ -162,6 +164,16 @@ module Sentinel
       else
         self.class.update(self.id, attrs)
       end
+    end
+
+    # Update entity attributes based on a Hash
+    # TODO avoid primary key updates
+    def update_attributes(attributes={})
+      attributes.keys.each do |k|
+        send("#{k}=", attributes[k])
+      end
+
+      save
     end
 
     # Detects if current instance is a new record?
