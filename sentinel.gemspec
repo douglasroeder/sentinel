@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["douglas@boo-box.com"]
   spec.description   = %q{Sentinel SalesForce integration}
   spec.summary       = %q{Sentinel SalesForce integration}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/mandrakez/sentinel"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
