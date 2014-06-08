@@ -143,7 +143,7 @@ module Sentinel
       end
     end
 
-    def initialize
+    def initialize(attributes={})
       self.class.fields.keys.each do |key|
         attribute = self.class.fields[key]
         field_name = attribute[:alias] ? attribute[:alias] : key
@@ -153,6 +153,10 @@ module Sentinel
  
         # setter
         self.class.class_eval("def #{field_name}=(val);@#{field_name}=val;end")
+      end
+
+      attributes.keys.each do |k|
+        send("#{k}=", attributes[k])
       end
     end
 

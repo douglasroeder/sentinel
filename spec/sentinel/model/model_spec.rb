@@ -27,6 +27,12 @@ RSpec.describe Sentinel::Model do
     expect(TestClass.new).to respond_to(:name)
   end
 
+  it 'should be able to instanciate with a set of attributes' do
+    test = TestClass.new({name: 'Fritz Doe'})
+
+    expect(test.name).to eql('Fritz Doe')
+  end
+
   describe '.find' do
     let(:find_response) do
       { Id: '123', Name: 'John Doe', Email: 'johndoe@example.org', Telephone: '(11) 9999-8833' }
