@@ -28,16 +28,14 @@ RSpec.describe Sentinel::Model do
   end
 
   describe '.find' do
+    let(:find_response) do
+      { Id: '123', Name: 'John Doe', Email: 'johndoe@example.org', Telephone: '(11) 9999-8833' }
+    end
+
     before :each do
       client_mock = double
       allow(Sentinel).to receive(:client) { client_mock }
-
-      response_mock = double
-      allow(response_mock).to receive(:Id) { '123' }
-      allow(response_mock).to receive(:Name) { 'John Doe' }
-      allow(response_mock).to receive(:Email) { 'johndoe@example.org' }
-      allow(response_mock).to receive(:Telephone) { '(11) 9999-8833' }
-
+      response_mock = mock_find_and_query_response(find_response)
       allow(client_mock).to receive(:find).with('Contact', 123) { response_mock }
     end
 
@@ -46,6 +44,55 @@ RSpec.describe Sentinel::Model do
 
       expect(test.name).to eql('John Doe')
       expect(test.id).to eql('123')
+    end
+  end
+
+  describe '.query' do
+    describe 'when successful' do
+      let(:row_1) do
+        { Id: '123', Name: 'John Doe', Email: 'johndoe@example.org', Telephone: '(11) 9999-8833' }
+      end
+
+      let(:row_2) do
+        { Id: '124', Name: 'Doe John', Email: 'doejohn@example.org', Telephone: '(11) 9999-3388' }
+      end
+
+      before :each do
+        client_mock = double
+
+        allow(Sentinel).to receive(:client) { client_mock }
+        response_mock = [mock_find_and_query_response(row_1), mock_find_and_query_response(row_2)]
+
+        allow(client_mock).to receive(:query) { response_mock }
+
+        @results = TestClass.query('query')
+      end
+
+      it 'should fetch an Array with 2 results' do
+        expect(@results.size).to eql(2)
+      end
+    end
+
+    describe 'when unsuccessful' do
+      let(:row) do
+        { Id: '124', Name: 'Doe John', Email: 'doejohn@example.org', Telephone: '(11) 9999-3388' }
+      end
+
+      before :each do
+        client_mock = double
+
+        allow(Sentinel).to receive(:client) { client_mock }
+        response_mock = mock_find_and_query_response(row)
+        allow(response_mock).to receive(:Id) { raise }
+
+        allow(client_mock).to receive(:query) { [response_mock] }
+      end
+
+      it 'should raise exception' do
+        expect {
+          TestClass.query('query')
+        }.to raise_exception(Sentinel::InvalidFieldMappingError)
+      end
     end
   end
 
@@ -179,5 +226,16 @@ RSpec.describe Sentinel::Model do
         expect( TestClass.destroy(123)).to eql(false)
       end
     end
+  end
+
+  private
+  def mock_find_and_query_response(attrs)
+    response_mock = double
+
+    attrs.keys.each do |key|
+      allow(response_mock).to receive(key) { attrs[key] }
+    end
+
+    return response_mock
   end
 end

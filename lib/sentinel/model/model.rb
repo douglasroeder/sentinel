@@ -20,6 +20,41 @@ module Sentinel
       def find(id)
         result = Sentinel.client.find(entity_name, id)
 
+        klass = create_klass_from_result(result)
+
+        return klass
+      end
+
+      # Query entity data based on SOQL
+      # Remember that only mapped fields will be parsed
+      #
+      # @param qrystring [String] query using SOQL syntax
+      #
+      # @example
+      #   class Contact
+      #     include Sentinel::Mdoel
+      #
+      #     field :Name, alias: :name
+      #     field :Email, alias: :email
+      #     field :CreatedDate, alias: :created_at
+      #   end
+      #
+      #   contacts = Contact.query('SELECT Id, Name, Email FROM Contact ORDER
+      #   BY CreatedDate DESC LIMIT 10')
+      #
+      def query(qrystring)
+        results = Sentinel.client.query(qrystring)
+
+        response = []
+        results.each do |result|
+          response << create_klass_from_result(result)
+        end
+
+        return response
+      end
+
+      # Parse result and map to a new entity class
+      def create_klass_from_result(result)
         klass = new
 
         klass.id = result.Id
@@ -32,6 +67,8 @@ module Sentinel
         end
 
         return klass
+      rescue
+        raise InvalidFieldMappingError, 'Error mapping entity, check your query and entity field attributes!'
       end
 
       # Create a new SalesForce entity row
