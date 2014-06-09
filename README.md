@@ -40,8 +40,11 @@ class Contact
   include ActiveModel::Validations
   include Sentinel::Model
 
+  # SalesForce entity, will use class name if absent
   set_sentinel_table 'Contact'
 
+  # Entity field names
+  # 'alias' will generate getters/setters with specific name
   field :FirstName, alias: :first_name
   field :LastName, alias: :last_name
   field :Email, alias: :email
