@@ -1,4 +1,5 @@
 # Sentinel
+[![Build Status](https://travis-ci.org/mandrakez/sentinel.svg)](https://travis-ci.org/mandrakez/sentinel)
 
 Sentinel is a SalesForce integration gem. This gem allows you to do simple data access operations, like **find/create/update**.
 
