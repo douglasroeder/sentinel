@@ -1,5 +1,6 @@
 # Sentinel
 [![Build Status](https://travis-ci.org/mandrakez/sentinel.svg)](https://travis-ci.org/mandrakez/sentinel)
+[ ![Codeship Status for mandrakez/sentinel](https://www.codeship.io/projects/53fbb640-01a3-0132-5770-3a93b3c36a81/status)](https://www.codeship.io/projects/30225)
 
 Sentinel is a SalesForce integration gem. This gem allows you to do simple data access operations, like **find/create/update**.
 
